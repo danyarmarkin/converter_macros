@@ -7,11 +7,10 @@ count = 0
 step = int(input("step = "))
 nameInd = 0
 
-
 while success:
     count += 1
     if count % step != 0:
-        vidcap.read()
+        success, image = vidcap.read()
         continue
     cv2.imwrite("AAAA/frame%d.jpg" % nameInd, image)     # save frame as JPEG file
     success, image = vidcap.read()
