@@ -1,0 +1,75 @@
+from tkinter import *
+import cv2
+import os
+# from tkFileDialog import *
+from tkinter.filedialog import askopenfile, askdirectory
+import separator
+
+root = Tk()
+root.geometry("600x400")
+
+path = StringVar()
+path.set("...")
+
+outputPath = StringVar()
+outputPath.set("...")
+
+step = IntVar()
+step.set(10)
+
+def getFile():
+    global path
+    file = askopenfile(parent=root, mode='rb', title='Choose a file')
+    p = os.path.abspath(file.name)
+    print(p)
+    path.set(p)
+
+def setOutputPath():
+    global outputPath
+    file = askdirectory()
+    print(file)
+    outputPath.set(file)
+
+frame = Frame(root, borderwidth = 1)
+frame.place(relx=0, rely=0)
+frame.grid(row=0, column=0)
+
+pathLabel = Label(frame, text="Path to video file")
+pathLabel.grid(row=0, column=0)
+
+pathEntry = Entry(frame, width=45, textvariable=path)
+pathEntry.grid(row=0, column=1)
+
+browseButton = Button(frame, text="Browse", command=getFile)
+browseButton.grid(row=0, column=2)
+
+
+outputPathLabel = Label(frame, text="Output Folder")
+outputPathLabel.grid(row=1, column=0)
+
+outputPathEntry = Entry(frame, width=45, textvariable=outputPath)
+outputPathEntry.grid(row=1, column=1)
+
+outputPathBrowseButton = Button(frame, text="Browse", command=setOutputPath)
+outputPathBrowseButton.grid(row=1, column=2)
+
+
+stepLabel = Label(frame, text="Step")
+stepLabel.grid(row=2, column=0)
+
+stepEntry = Entry(frame, width=10, textvariable=step)
+stepEntry.grid(row=2, column=1)
+
+
+statusLabel = Label(frame, text="")
+statusLabel.grid(row=3, column=1)
+
+
+def start():
+    global statusLabel
+    separator.separate(path.get(), int(step.get()), outputPath.get(), statusLabel)
+
+startButton = Button(frame, text="Start", command=start)
+startButton.grid(row=3, column=2)
+
+root.mainloop()
