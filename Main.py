@@ -29,6 +29,8 @@ def getFile():
     print(p)
     path.set(p)
     childes = list(p.split("/"))[:-1]
+    if len(childes) == 0:
+        childes = list(p.split("\\"))[:-1]
     if childes[0] == '':
         childes = childes[1:]
     print(childes)
