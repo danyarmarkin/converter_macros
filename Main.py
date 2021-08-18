@@ -1,12 +1,17 @@
 from tkinter import *
+from tkinter.ttk import Progressbar
+
 import cv2
 import os
 # from tkFileDialog import *
 from tkinter.filedialog import askopenfile, askdirectory
 import separator
 
+import Telegram
+
 root = Tk()
 root.geometry("600x400")
+root.title("Convertor")
 
 path = StringVar()
 path.set("...")
@@ -18,11 +23,19 @@ step = IntVar()
 step.set(10)
 
 def getFile():
-    global path
+    global path, outputPath
     file = askopenfile(parent=root, mode='rb', title='Choose a file')
     p = os.path.abspath(file.name)
     print(p)
     path.set(p)
+    childes = list(p.split("/"))[:-1]
+    if childes[0] == '':
+        childes = childes[1:]
+    print(childes)
+    op = ""
+    for child in childes:
+        op += "/" + child
+    outputPath.set(op)
 
 def setOutputPath():
     global outputPath
@@ -62,14 +75,18 @@ stepEntry.grid(row=2, column=1)
 
 
 statusLabel = Label(frame, text="")
-statusLabel.grid(row=3, column=1)
+statusLabel.grid(row=4, column=1)
 
+
+progressBar = Progressbar(frame, length=400, mode="determinate")
+progressBar.grid(row=3, column=1)
 
 def start():
-    global statusLabel
-    separator.separate(path.get(), int(step.get()), outputPath.get(), statusLabel)
-
+    global statusLabel, progressBar
+    separator.separate(path.get(), int(step.get()), outputPath.get(), statusLabel, progressBar)
 startButton = Button(frame, text="Start", command=start)
 startButton.grid(row=3, column=2)
 
 root.mainloop()
+
+# Telegram.pool()

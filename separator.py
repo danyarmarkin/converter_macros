@@ -1,8 +1,9 @@
 import cv2
 import os
+from math import *
 import tkinter
 
-def separate(videoFile, step, directory, status):
+def separate(videoFile, step, directory, status, progressBar):
     try:
         os.mkdir(directory)
     except FileExistsError:
@@ -17,12 +18,17 @@ def separate(videoFile, step, directory, status):
 
     while success:
         count += 1
-        if count % step != 0:
+        if count % step == step - 1:
             success, image = vidcap.read()
             continue
-        cv2.imwrite(directory + "/frame%d.jpg" % nameInd, image)     # save frame as JPEG file
+        if count % step != 0:
+            vidcap.read()
+            continue
+        cv2.imwrite(directory + "/frame%d.png" % nameInd, image)     # save frame as PNG file
         success, image = vidcap.read()
         print('Read a new frame:', success, "with frame number", nameInd)
         nameInd += 1
         status["text"] = "Status: " + str(nameInd) + "/" + str(total) + " frames"
+        progressBar["value"] = floor(nameInd / total * 100)
         status.update()
+        progressBar.update()
