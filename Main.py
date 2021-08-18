@@ -11,7 +11,7 @@ import Telegram
 
 root = Tk()
 root.geometry("600x400")
-root.title("Convertor")
+root.title("Converter")
 
 path = StringVar()
 path.set("...")
