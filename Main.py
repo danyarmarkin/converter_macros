@@ -29,14 +29,18 @@ def getFile():
     print(p)
     path.set(p)
     childes = list(p.split("/"))[:-1]
+    isWind = False
     if len(childes) == 0:
         childes = list(p.split("\\"))[:-1]
+        isWind = True
     if childes[0] == '':
         childes = childes[1:]
     print(childes)
     op = ""
     for child in childes:
         op += "/" + child
+    if isWind:
+        op = op[1:]
     outputPath.set(op)
 
 def setOutputPath():
