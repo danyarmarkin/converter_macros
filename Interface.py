@@ -105,23 +105,30 @@ def startTkinterInterface():
                 name = list(p.split("\\"))[-1][:-4]
             childes = list(p.split("/"))[:-1]
             isWind = False
+            print(childes)
             if len(childes) == 0:
                 childes = list(p.split("\\"))[:-1]
                 isWind = True
+            try:
+                if childes[0][-1] == ":":
+                    isWind = True
+            except Exception:
+                pass
             if childes[0] == '':
                 childes = childes[1:]
-            print(childes)
             op = ""
             for child in childes:
                 op += "/" + child
             if isWind:
                 del op[op.index("/")]
+
             session = name.split("_")
             obj_name = session[0]
             session_name = session[1]
             devices = session[2]
             folder_name = obj_name + "_" + session_name + "_" + str(devices)[-1] + "_" + session[3] + "_" + session[4]
             op += "/" + folder_name
+
             outputPath.set(op)
             start_frame = 0
             with open("converter_data.json") as converter_data:
