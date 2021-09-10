@@ -11,7 +11,14 @@ def getFramesAmount(videoFile):
     return total
 
 
+is_stop = False
+def stop():
+    global is_stop
+    is_stop = True
+
+
 def separate(videoFile, step, directory, status, progressBar, name, start_frame, save_as_jpg):
+    global is_stop
     try:
         os.mkdir(directory)
     except FileExistsError:
@@ -25,6 +32,9 @@ def separate(videoFile, step, directory, status, progressBar, name, start_frame,
     total //= step
 
     while success:
+        if is_stop:
+            is_stop = False
+            break
         count += 1
         if count % step == step - 1:
             success, image = vidcap.read()

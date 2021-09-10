@@ -152,6 +152,12 @@ def startTkinterInterface():
     jpegCheck = Checkbutton(frame, variable=save_as_jpg)
     jpegCheck.grid(row=5, column=1)
 
+    def stop():
+        separator.stop()
+
+    stopButton = Button(frame, text="Stop", command=stop)
+    stopButton.grid(row=5, column=2)
+
     stepCallback(step)
 
     root.mainloop()
