@@ -3,6 +3,14 @@ import os
 from math import *
 import tkinter
 
+
+def getFramesAmount(videoFile):
+    vidcap = cv2.VideoCapture(videoFile)
+    total = int(vidcap.get(cv2.CAP_PROP_FRAME_COUNT))
+    print(total)
+    return total
+
+
 def separate(videoFile, step, directory, status, progressBar):
     try:
         os.mkdir(directory)

@@ -2,7 +2,8 @@ import telebot
 
 bot = telebot.TeleBot('1819048696:AAEPk_T3sDr4mimemdk_HZ6tyjI_A6gch18')
 
-
+def loadJson():
+    telebot_info = open('telebot_info.json')
 
 def sendMessage(id, message):
     pass

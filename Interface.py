@@ -1,10 +1,8 @@
 from tkinter import *
 from tkinter.ttk import Progressbar
 
-
-import cv2
+from math import *
 import os
-# from tkFileDialog import *
 from tkinter.filedialog import askopenfile, askdirectory
 import separator
 
@@ -24,11 +22,11 @@ def startTkinterInterface():
     step.set(10)
 
     def getFile():
-        # global path, outputPath
         file = askopenfile(parent=root, mode='rb', title='Choose a file')
         p = os.path.abspath(file.name)
         print(p)
         path.set(p)
+        name = list(p.split("/"))[-1][:-4]
         childes = list(p.split("/"))[:-1]
         isWind = False
         if len(childes) == 0:
@@ -42,7 +40,10 @@ def startTkinterInterface():
             op += "/" + child
         if isWind:
             op = op[1:]
+        op += "/" + name
         outputPath.set(op)
+        step.set(step.get() + 1)
+        step.set(step.get() - 1)
 
     def setOutputPath():
         # global outputPath
@@ -72,11 +73,31 @@ def startTkinterInterface():
     outputPathBrowseButton = Button(frame, text="Browse", command=setOutputPath)
     outputPathBrowseButton.grid(row=1, column=2)
 
-    stepLabel = Label(frame, text="Step")
-    stepLabel.grid(row=2, column=0)
+    # Step
 
-    stepEntry = Entry(frame, width=10, textvariable=step)
-    stepEntry.grid(row=2, column=1)
+    stepLabel = Label(frame, text="Step")
+    stepLabel.grid(row=2, column=1)
+
+    stepOutputFrames = Label(frame, text="")
+    stepOutputFrames.grid(row=2, column=2)
+
+    def stepCallback(sv):
+        try:
+            value = int(sv.get())
+            print("try")
+            frames = separator.getFramesAmount(path.get())
+            print("try")
+            stepLabel["text"] = "step with " + str(frames) + " frames video => " + str(int(floor(frames / value))) + " frames"
+            print("try")
+        except Exception:
+            print("exception")
+            stepLabel["text"] = "error with step"
+
+    stepEntry = Entry(frame, width=10, textvariable=step, validatecommand=stepCallback)
+    stepEntry.grid(row=2, column=0)
+    step.trace("w", lambda name, index, mode, sv=step: stepCallback(sv))
+
+    # Progress
 
     statusLabel = Label(frame, text="")
     statusLabel.grid(row=4, column=1)
@@ -90,5 +111,7 @@ def startTkinterInterface():
 
     startButton = Button(frame, text="Start", command=start)
     startButton.grid(row=3, column=2)
+
+    stepCallback(step)
 
     root.mainloop()
