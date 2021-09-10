@@ -120,7 +120,7 @@ def startTkinterInterface():
             for child in childes:
                 op += "/" + child
             if isWind:
-                del op[op.index("/")]
+                op = op[1:]
 
             session = name.split("_")
             obj_name = session[0]
