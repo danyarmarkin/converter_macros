@@ -25,6 +25,8 @@ def startTkinterInterface():
     step = IntVar()
     step.set(10)
 
+    save_as_jpg = BooleanVar()
+    save_as_jpg.set(False)
 
     def getFile():
         global files
@@ -139,10 +141,16 @@ def startTkinterInterface():
             with open("converter_data.json", "w") as converter_data:
                 converter_data.write(json.dumps(file_content))
             separator.separate(path.get(), int(step.get()), outputPath.get(), statusLabel, progressBar, session_name +
-                               "_" + devices, 0)
+                               "_" + devices, 0, save_as_jpg.get())
 
     startButton = Button(frame, text="Start", command=start)
     startButton.grid(row=3, column=2)
+
+    jpegLabel = Label(frame, text="Save as .JPG")
+    jpegLabel.grid(row=5, column=0)
+
+    jpegCheck = Checkbutton(frame, variable=save_as_jpg)
+    jpegCheck.grid(row=5, column=1)
 
     stepCallback(step)
 

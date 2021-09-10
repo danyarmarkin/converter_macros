@@ -11,7 +11,7 @@ def getFramesAmount(videoFile):
     return total
 
 
-def separate(videoFile, step, directory, status, progressBar, name, start_frame):
+def separate(videoFile, step, directory, status, progressBar, name, start_frame, save_as_jpg):
     try:
         os.mkdir(directory)
     except FileExistsError:
@@ -33,7 +33,10 @@ def separate(videoFile, step, directory, status, progressBar, name, start_frame)
             vidcap.read()
             continue
         p = 4 - len(str(start_frame + nameInd))
-        cv2.imwrite(directory + "/" + name + "_" + "0"*p + "%d.png" % (start_frame + nameInd), image)     # save frame as PNG file
+        if save_as_jpg:
+            cv2.imwrite(directory + "/" + name + "_" + "0" * p + "%d.jpg" % (start_frame + nameInd), image)
+        else:
+            cv2.imwrite(directory + "/" + name + "_" + "0"*p + "%d.png" % (start_frame + nameInd), image)     # save frame as PNG file
         success, image = vidcap.read()
         print('Read a new frame:', success, "with frame number", nameInd)
         nameInd += 1
