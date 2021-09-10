@@ -2,10 +2,14 @@ from tkinter import *
 from tkinter.ttk import Progressbar
 
 from math import *
-import os
-from tkinter.filedialog import askopenfile, askdirectory
+import json
+from tkinter.filedialog import askopenfile, askdirectory, askopenfilenames
 import separator
 
+from asyncio import *
+
+
+files = []
 
 def startTkinterInterface():
     root = Tk()
@@ -21,29 +25,15 @@ def startTkinterInterface():
     step = IntVar()
     step.set(10)
 
+
     def getFile():
-        file = askopenfile(parent=root, mode='rb', title='Choose a file')
-        p = os.path.abspath(file.name)
-        print(p)
-        path.set(p)
-        name = list(p.split("/"))[-1][:-4]
-        childes = list(p.split("/"))[:-1]
-        isWind = False
-        if len(childes) == 0:
-            childes = list(p.split("\\"))[:-1]
-            isWind = True
-        if childes[0] == '':
-            childes = childes[1:]
-        print(childes)
-        op = ""
-        for child in childes:
-            op += "/" + child
-        if isWind:
-            op = op[1:]
-        op += "/" + name
-        outputPath.set(op)
-        step.set(step.get() + 1)
-        step.set(step.get() - 1)
+        global files
+        file = askopenfilenames(parent=root, title='Choose a files')
+        files = file
+        if len(file) >= 1:
+            path.set(str(len(file)) + " videos")
+            outputPath.set("to " + str(len(file)) + " folders")
+
 
     def setOutputPath():
         # global outputPath
@@ -106,8 +96,43 @@ def startTkinterInterface():
     progressBar.grid(row=3, column=1)
 
     def start():
+        global files
         # global statusLabel, progressBar
-        separator.separate(path.get(), int(step.get()), outputPath.get(), statusLabel, progressBar)
+        for p in files:
+            path.set(p)
+            name = list(p.split("/"))[-1][:-4]
+            if len(list(p.split("/"))) == 1:
+                name = list(p.split("\\"))[-1][:-4]
+            childes = list(p.split("/"))[:-1]
+            isWind = False
+            if len(childes) == 0:
+                childes = list(p.split("\\"))[:-1]
+                isWind = True
+            if childes[0] == '':
+                childes = childes[1:]
+            print(childes)
+            op = ""
+            for child in childes:
+                op += "/" + child
+            if isWind:
+                op = op[1:]
+            session = name.split("_")
+            obj_name = session[0]
+            session_name = session[1]
+            devices = session[2]
+            folder_name = obj_name + "_" + session_name + "_" + str(devices)[-1] + "_" + session[3] + "_" + session[4]
+            op += "/" + folder_name
+            outputPath.set(op)
+            start_frame = 0
+            with open("converter_data.json") as converter_data:
+                file_content = json.load(converter_data)
+                if folder_name in file_content["sessions"]:
+                    start_frame = file_content["sessions"][folder_name]
+                file_content["sessions"][folder_name] = start_frame + int(separator.getFramesAmount(path.get()) / step.get())
+            with open("converter_data.json", "w") as converter_data:
+                converter_data.write(json.dumps(file_content))
+            separator.separate(path.get(), int(step.get()), outputPath.get(), statusLabel, progressBar, session_name +
+                               "_" + devices, 0)
 
     startButton = Button(frame, text="Start", command=start)
     startButton.grid(row=3, column=2)
