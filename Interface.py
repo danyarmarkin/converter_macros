@@ -133,13 +133,13 @@ def startTkinterInterface():
 
             outputPath.set(op)
             start_frame = 0
-            with open("converter_data.json") as converter_data:
-                file_content = json.load(converter_data)
-                if folder_name in file_content["sessions"]:
-                    start_frame = file_content["sessions"][folder_name]
-                file_content["sessions"][folder_name] = start_frame + int(separator.getFramesAmount(path.get()) / step.get())
-            with open("converter_data.json", "w") as converter_data:
-                converter_data.write(json.dumps(file_content))
+            # with open("converter_data.json") as converter_data:
+            #     file_content = json.load(converter_data)
+            #     if folder_name in file_content["sessions"]:
+            #         start_frame = file_content["sessions"][folder_name]
+            #     file_content["sessions"][folder_name] = start_frame + int(separator.getFramesAmount(path.get()) / step.get())
+            # with open("converter_data.json", "w") as converter_data:
+            #     converter_data.write(json.dumps(file_content))
             separator.separate(path.get(), int(step.get()), outputPath.get(), statusLabel, progressBar, session_name +
                                "_" + devices, 0, save_as_jpg.get())
 
