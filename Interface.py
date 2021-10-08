@@ -100,6 +100,16 @@ def startTkinterInterface():
     progressBar = Progressbar(frame, length=400, mode="determinate")
     progressBar.grid(row=3, column=1)
 
+    speedLabel = Label(frame, text="Speed")
+    speedLabel.grid(row=7, column=0)
+    speedFieldLabel = Label(frame, text="0 fps")
+    speedFieldLabel.grid(row=7, column=1)
+
+    endLabel = Label(frame, text="End in")
+    endLabel.grid(row=8, column=0)
+    endFieldLabel = Label(frame, text="0 sec")
+    endFieldLabel.grid(row=8, column=1)
+
     def start():
         global files
         # global statusLabel, progressBar
@@ -136,7 +146,7 @@ def startTkinterInterface():
 
             outputPath.set(op)
             separator.separate(path.get(), int(step.get()), outputPath.get(), statusLabel, progressBar, session_name +
-                               "_" + devices, 0, save_as_jpg.get(), tolerance.get())
+                               "_" + devices, 0, save_as_jpg.get(), tolerance.get(), speedFieldLabel, endFieldLabel)
 
     startButton = Button(frame, text="Start", command=start)
     startButton.grid(row=3, column=2)
