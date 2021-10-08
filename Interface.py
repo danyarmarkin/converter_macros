@@ -25,6 +25,9 @@ def startTkinterInterface():
     step = IntVar()
     step.set(10)
 
+    tolerance = IntVar()
+    tolerance.set(0)
+
     save_as_jpg = BooleanVar()
     save_as_jpg.set(False)
 
@@ -132,16 +135,8 @@ def startTkinterInterface():
             op += "/" + folder_name
 
             outputPath.set(op)
-            start_frame = 0
-            # with open("converter_data.json") as converter_data:
-            #     file_content = json.load(converter_data)
-            #     if folder_name in file_content["sessions"]:
-            #         start_frame = file_content["sessions"][folder_name]
-            #     file_content["sessions"][folder_name] = start_frame + int(separator.getFramesAmount(path.get()) / step.get())
-            # with open("converter_data.json", "w") as converter_data:
-            #     converter_data.write(json.dumps(file_content))
             separator.separate(path.get(), int(step.get()), outputPath.get(), statusLabel, progressBar, session_name +
-                               "_" + devices, 0, save_as_jpg.get())
+                               "_" + devices, 0, save_as_jpg.get(), tolerance.get())
 
     startButton = Button(frame, text="Start", command=start)
     startButton.grid(row=3, column=2)
@@ -151,6 +146,12 @@ def startTkinterInterface():
 
     jpegCheck = Checkbutton(frame, variable=save_as_jpg)
     jpegCheck.grid(row=5, column=1)
+
+    toleranceLabel = Label(frame, text="Tolerance")
+    toleranceLabel.grid(row=6, column=0)
+
+    toleranceEntry = Entry(frame, textvariable=tolerance)
+    toleranceEntry.grid(row=6, column=1)
 
     def stop():
         separator.stop()
